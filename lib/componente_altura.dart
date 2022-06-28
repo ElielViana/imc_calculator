@@ -65,7 +65,7 @@ class _ComponenteAlturaState extends State<ComponenteAltura> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.altura.toString().substring(0,4),
+                  widget.altura>1 ? widget.altura.toString().substring(0,4) : widget.altura.toString(),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 50,
