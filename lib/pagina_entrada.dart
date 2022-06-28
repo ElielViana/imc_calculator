@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:imc_calculator/caucula_imc.dart';
 import 'package:imc_calculator/componente_base.dart';
+import 'package:imc_calculator/resultado_imc.dart';
 
 import 'botao_composicao.dart';
 import 'card_widget.dart';
@@ -21,6 +23,8 @@ class _PaginaEntradaState extends State<PaginaEntrada> {
   Color corAtiva = const Color.fromARGB(255, 40, 43, 75);
   int idade = 0;
   int peso = 0;
+  double altura = 1;
+  String sexo = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +43,13 @@ class _PaginaEntradaState extends State<PaginaEntrada> {
                     onPress: () {
                       setState(() {
                         generoSelecionado = Genero.masculino;
+                        sexo = 'masculino';
                       });
                     },
                     icon: FontAwesomeIcons.mars,
                     texto: 'Masculino',
                     heigth: 155,
-                    top: 52,
+                    top: 45,
                     left: 10,
                     rigth: 5,
                     cor: generoSelecionado == Genero.masculino
@@ -57,12 +62,13 @@ class _PaginaEntradaState extends State<PaginaEntrada> {
                     onPress: () {
                       setState(() {
                         generoSelecionado = Genero.feminino;
+                         sexo = 'feminino';
                       });
                     },
                     icon: FontAwesomeIcons.venus,
                     texto: 'Feminino',
                     heigth: 155,
-                    top: 52,
+                    top: 45,
                     rigth: 10,
                     cor: generoSelecionado == Genero.feminino
                         ? corAtiva
@@ -72,8 +78,16 @@ class _PaginaEntradaState extends State<PaginaEntrada> {
               ],
             ),
           ),
-          const Expanded(
+         
+           Expanded(
             child: ComponenteAltura(
+              altura: altura,
+              onMoveSlide: (double value){
+                debugPrint('$value');
+               setState(() {
+                  altura = value;
+               });
+              },
               bottom: 20,
               left: 10,
               rigth: 10,
@@ -143,10 +157,32 @@ class _PaginaEntradaState extends State<PaginaEntrada> {
               ],
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            height: 80,
-            color: const Color.fromARGB(255, 234, 52, 104),
+          InkWell(
+            onTap: (){
+              setState(() {
+                debugPrint('altura aqui $altura');
+              });
+              List<String> resp = CauculaImc().cauculadoraImc(altura.toDouble(), peso, idade, sexo);
+                Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  ResultadoImc(diagnostico: resp[0],imc: resp[1],frase: resp[2],)),
+            );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.only(top: 10),
+              height: 80,
+              color: const Color.fromARGB(255, 234, 52, 104),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('Caucular seu IMC', style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white
+                  ),)
+                ],
+              ),
+            ),
           )
         ],
       ),

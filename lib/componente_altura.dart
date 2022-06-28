@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 class ComponenteAltura extends StatefulWidget {
   final double? heigth, top, bottom, left, rigth;
   final String? texto;
-
+  double altura = 1;
+  final Function(double)? onMoveSlide;
   final Color? cor;
   final VoidCallback? onPress;
 
-  const ComponenteAltura({
+   ComponenteAltura({
     this.onPress,
+    this.onMoveSlide,
+    required this.altura,
     this.texto,
     this.heigth,
     this.top,
@@ -24,7 +27,7 @@ class ComponenteAltura extends StatefulWidget {
 }
 
 class _ComponenteAlturaState extends State<ComponenteAltura> {
-  int _value = 6;
+  int value = 1;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -62,7 +65,7 @@ class _ComponenteAlturaState extends State<ComponenteAltura> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _value.toString(),
+                  widget.altura.toString().substring(0,4),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 50,
@@ -93,17 +96,14 @@ class _ComponenteAlturaState extends State<ComponenteAltura> {
             SizedBox(
               height: 80,
               child: Slider(
-                  value: _value.toDouble(),
-                  min: 1.0,
+                  value:widget.altura,
+
+                  min: 1,
                   max: 230,
                   activeColor: Colors.white,
                   inactiveColor: const Color(0xFF8D8E98),
                   thumbColor: const Color(0xFFEB1555),
-                  onChanged: (double newValue) {
-                    setState(() {
-                      _value = newValue.round();
-                    });
-                  },
+                  onChanged:widget.onMoveSlide,
                   semanticFormatterCallback: (double newValue) {
                     return '${newValue.round()} dollars';
                   }),
